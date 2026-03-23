@@ -1,5 +1,5 @@
 {
-  "name": "My workflow",
+  "name": "LinkedIn Jobs",
   "nodes": [
     {
       "parameters": {
@@ -37,7 +37,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        208,
+        240,
         0
       ],
       "id": "04c139c4-f9f7-4e88-90fd-42e6957100d0",
@@ -67,7 +67,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        416,
+        496,
         0
       ],
       "id": "32981d2e-c752-45fd-b362-b03ce63c6934",
@@ -87,7 +87,7 @@
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        624,
+        752,
         0
       ],
       "id": "4a826d1b-1201-4d10-b944-5a29f1e57942",
@@ -100,13 +100,12 @@
           "value": "https://console.apify.com/actors/hKByXkMQaC5Qt9UMN/input",
           "mode": "url"
         },
-        "customBody": "{\n    \"count\": 100,\n    \"scrapeCompany\": true,\n    \"splitByLocation\": false,\n    \"urls\": [\n        \"https://www.linkedin.com/jobs/search/?currentJobId=4380733508&distance=25&geoId=102007122&keywords=N8N&origin=JOB_SEARCH_PAGE_QUERY_EXPANSION\",\n        \"https://www.linkedin.com/jobs/search/?currentJobId=4359070952&distance=25&geoId=101992040&keywords=Automation%20Engineer&origin=JOB_SEARCH_PAGE_KEYWORD_HISTORY&refresh=true\"\n    ]\n}",
-        "timeout": {}
+        "customBody": "{\n    \"count\": 100,\n    \"scrapeCompany\": true,\n    \"splitByLocation\": false,\n    \"urls\": [\n        \"https://www.linkedin.com/jobs/n8n-jobs-worldwide/?currentJobId=4384087497\"\n    ]\n}"
       },
       "type": "@apify/n8n-nodes-apify.apify",
       "typeVersion": 1,
       "position": [
-        832,
+        1024,
         0
       ],
       "id": "ae0235ef-da73-4ad1-95c8-49b263212798",
@@ -122,13 +121,12 @@
       "parameters": {
         "resource": "Datasets",
         "datasetId": "={{ $json.defaultDatasetId }}",
-        "offset": {},
         "options": {}
       },
       "type": "@apify/n8n-nodes-apify.apify",
       "typeVersion": 1,
       "position": [
-        1040,
+        1296,
         0
       ],
       "id": "6e8a36bb-1d66-402d-b601-435af7815d4f",
@@ -168,7 +166,7 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.3,
       "position": [
-        1248,
+        1552,
         0
       ],
       "id": "b305f2ad-207b-4977-a8da-75d393c3d24b",
@@ -294,7 +292,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1456,
+        1792,
         0
       ],
       "id": "f641da92-04ac-4497-a878-405a3ca027de",
@@ -310,7 +308,7 @@
       "parameters": {
         "content": "# Step 1 - Get  and remove duplicated jobs",
         "height": 288,
-        "width": 1712
+        "width": 2032
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
@@ -383,14 +381,14 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Compare the following job description with the provided resume.\nEvaluates how well the candidate's resume matches the job requirements.\n1 = Very poor match\n2 = Weak match\n3 = Moderate match\n4 = Strong match\n5 = Excellent match\n\nOnly provide the numeric score (1 - 5) as the output.\n\nJob Description: {{ $('Get row(s) in sheet1').item.json.Description }}\n\nResume: {{ $('Get Resume').first().json.content }}",
+        "text": "={{ $json.fullPrompt }}",
         "hasOutputParser": true,
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        624,
+        832,
         384
       ],
       "id": "8a0af4e5-3ee0-49df-9122-f8fb7a61a6ea",
@@ -405,8 +403,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
       "position": [
-        544,
-        240
+        736,
+        224
       ],
       "id": "50d86df1-1dad-4fe7-9cab-ecb682515ea5",
       "name": "OpenRouter Chat Model",
@@ -419,13 +417,13 @@
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n  \"score\": 0\n}"
+        "jsonSchemaExample": "{\n  \"score\": 0,\n  \"miss_requirements\": \"\"\n}"
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        832,
-        240
+        1072,
+        224
       ],
       "id": "0fe3060f-c66e-4764-ba1f-a306098ede3f",
       "name": "Structured Output Parser"
@@ -463,7 +461,7 @@
             {
               "id": "71b85698-caca-4b08-b431-8df33e2df8d7",
               "leftValue": "={{ $json.output.score }}",
-              "rightValue": 2,
+              "rightValue": 3,
               "operator": {
                 "type": "number",
                 "operation": "gte"
@@ -477,7 +475,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        976,
+        1584,
         384
       ],
       "id": "6e918146-e474-439c-8fea-c482257d6e2b",
@@ -617,7 +615,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1296,
+        1808,
         384
       ],
       "id": "6fc1daa5-040d-4f93-ac2a-eb9ab0570c93",
@@ -632,14 +630,14 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Generate a professional cover letter tailored to this specific job description, highlighting the most relevant skills and experiences from the resume.\nThe cover letter should :\n- Be clear, concise, short and professional.\n- Address the key requirements of job description.\n- Demonstrate enthusiasm and fit for the role.\n- Use candidate's experience from the resume.\n\nJob description: {{ $('Get row(s) in sheet1').item.json.Description }}\n\nResume: {{ $('Get Resume').item.json.content }}",
+        "text": "={{ $json.prompt }}",
         "hasOutputParser": true,
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        32,
+        384,
         816
       ],
       "id": "f8577de7-db85-4121-962a-75672cb355f4",
@@ -649,7 +647,7 @@
       "parameters": {
         "content": "# Step 2 - Check job relevance",
         "height": 368,
-        "width": 1712,
+        "width": 2032,
         "color": 4
       },
       "type": "n8n-nodes-base.stickyNote",
@@ -665,7 +663,7 @@
       "parameters": {
         "content": "# Step 3 - Prepare your cover letter",
         "height": 432,
-        "width": 1712,
+        "width": 2032,
         "color": 5
       },
       "type": "n8n-nodes-base.stickyNote",
@@ -685,7 +683,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
       "position": [
-        0,
+        352,
         672
       ],
       "id": "b74f42c8-5bde-4d13-b5c1-bb44f6adfd2a",
@@ -704,7 +702,7 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        208,
+        560,
         672
       ],
       "id": "7ce2824d-756b-4aa7-a90c-90cd2f3bfa93",
@@ -726,7 +724,7 @@
       "type": "n8n-nodes-base.googleDocs",
       "typeVersion": 2,
       "position": [
-        768,
+        1344,
         816
       ],
       "id": "36e8e527-2954-4137-99d2-c26b20f93827",
@@ -746,7 +744,7 @@
       "type": "n8n-nodes-base.googleDocs",
       "typeVersion": 2,
       "position": [
-        464,
+        928,
         816
       ],
       "id": "b905f36b-26f0-4f73-b95f-ce98ec8756b9",
@@ -893,7 +891,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1088,
+        1792,
         816
       ],
       "id": "e7e8f198-a7a5-4e41-9de4-51f41168a6a0",
@@ -902,6 +900,121 @@
         "googleSheetsOAuth2Api": {
           "id": "2jApfayuf7hTqZbd",
           "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "272b8cea-bee0-4ad4-b4d8-2acc8f6f4631",
+              "leftValue": "={{ $json.output.score }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1184,
+        384
+      ],
+      "id": "eaff5307-5b93-4f0a-aa1f-bfff38479ab9",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1HdP_4EGdDNtmbvPUjtvfsr50TeaNAa-BsDV2egMmCs4",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "الورقة1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HdP_4EGdDNtmbvPUjtvfsr50TeaNAa-BsDV2egMmCs4/edit#gid=0"
+        },
+        "startIndex": "={{ $('Get row(s) in sheet1').item.json.row_number }}"
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1376,
+        240
+      ],
+      "id": "8ccf37bb-7ec8-4944-8ed3-9b7a825ddbef",
+      "name": "Delete rows or columns from sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2jApfayuf7hTqZbd",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Pull data from previous nodes\nconst jobDescription = $('Get row(s) in sheet1').first().json.Description ?? '';\nconst resumeContent = $('Get Resume').first().json.content ?? '';\n\n// 2. Build the prompt\nconst aiPrompt = `\nYou are a precision recruitment evaluator. Follow these instructions strictly:\n\n1. **Relevance Check:** If the Job Description is not about automation or AI automation with n8n (not automation for testers) set \"score\" to 0, and set \"miss_requirements\" to \"null\" and do NOT continue.\n2. **Evaluation:** If relevant, compare the Job Description with the Resume:\n   - 1 = Very poor match\n   - 2 = Weak match\n   - 3 = Moderate match\n   - 4 = Strong match\n   - 5 = Excellent match\n3. **Gap Analysis:** List skills, tools, or experiences in the Job Description that are missing from the Resume in a field called \"miss_requirements\" and add use telegram tool to send \"miss_requirements\".\n\n---\nJob Description:\n${jobDescription}\n---\nResume:\n${resumeContent}\n`.trim();\n\n// 3. Return in correct n8n format\nreturn [{ json: { fullPrompt: aiPrompt } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        384
+      ],
+      "id": "8590b0b6-f8c3-4533-b793-21f88ed852e5",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsCode": "const jobDesc = $('Get row(s) in sheet1').first().json.Description;\nconst resume = $('Get Resume').first().json.content;\n\nif (!jobDesc) throw new Error(\"Job description is missing\");\nif (!resume) throw new Error(\"Resume content is missing\");\n\nconst prompt = `\nGenerate a concise, professional cover letter for Mohammed Shaheen. \nFocus on his expertise in n8n automation and LLM integration.\nJob Description: ${jobDesc}\nResume: ${resume}\nRequirements:\n- Under 250 words.\n- Professional and enthusiastic tone.\n- Highlight relevant project experience from the resume.\n`.trim();\n\nreturn [{ json: { prompt } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        32,
+        816
+      ],
+      "id": "6f3f5192-daf9-48e1-86ee-ff07d1289f46",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "chatId": "6252817666",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Text', ``, 'string') }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        224
+      ],
+      "id": "39268414-4036-422b-b458-10ed39e25a87",
+      "name": "Send a text message in Telegram",
+      "webhookId": "5b306278-c2ae-486d-8ff5-d466c2095ec5",
+      "credentials": {
+        "telegramApi": {
+          "id": "yymfv0VZBguIldjN",
+          "name": "LinkedIn Jobs"
         }
       }
     }
@@ -1033,7 +1146,7 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "Code in JavaScript",
             "type": "main",
             "index": 0
           }
@@ -1044,7 +1157,7 @@
       "main": [
         [
           {
-            "node": "If",
+            "node": "If1",
             "type": "main",
             "index": 0
           }
@@ -1055,7 +1168,7 @@
       "main": [
         [
           {
-            "node": "AI Agent1",
+            "node": "Code in JavaScript1",
             "type": "main",
             "index": 0
           }
@@ -1123,6 +1236,67 @@
           }
         ]
       ]
+    },
+    "Update row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Delete rows or columns from sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message in Telegram": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete rows or columns from sheet": {
+      "main": [
+        []
+      ]
     }
   },
   "active": false,
@@ -1130,7 +1304,7 @@
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "1d89e456-e280-446d-a013-bc838d413cfb",
+  "versionId": "54b298c1-a1c5-4a3d-a94c-029e48234cb6",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "2d53b58c49dc86b57592e908eaa305a1b7171f9f7e9ca1c93755a41f1190de85"
